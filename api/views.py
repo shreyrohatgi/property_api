@@ -15,21 +15,7 @@ class UserList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format = None):
-        data = request.data.copy()
-        username = data.get('username')
-        password = data.get('password') 
-        type_of_user = data.get('type_of_user')
-        try:
-            django_user_obj = User.objects.create(username=username, type_of_user=type_of_user)
-        except IntegrityError as e:
-            raise ValidationError(str(e))
-        django_user_obj.set_password(password)
-        django_user_obj.save()
-        data['auth_user'] = django_user_obj.pk
-        del data['type_of_user']
-        del data['username']
-        del data['password']
-        serializer = UserSerializer(data=data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -44,12 +30,12 @@ class UserDetail(APIView):
 
     def get(self, request, pk, format = None):
         user = self.get_object(pk)
-        serializer = UserSerializer(data=user)        
+        serializer = UserSerializer(user)      
         return Response(serializer.data)
 
     def put(self, request, pk, format = None):
         user = self.get_object(pk)
-        serializer = UserSerializer(data=user)
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
