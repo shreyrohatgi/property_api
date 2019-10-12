@@ -53,12 +53,22 @@ class User(AbstractUser):
         null=False,
     )
 
-# SuperAdmin - 1 for each institution
-class Admin(models.Model):
-    name = models.CharField(max_length=200, blank=False, null=True)
+# Property dealer client
+class LinkedAccounts(models.Model):
+    email = models.CharField(
+        max_length=50,
+        blank=False,
+        null=False,
+    )
+    password = models.CharField(
+        max_length=50,
+        blank=False,
+        null=False,
+    )
     auth_user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
     )
     def __str__(self):
         return str(self.name)
+        
