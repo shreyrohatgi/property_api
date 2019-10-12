@@ -1,5 +1,11 @@
 from django.shortcuts import render
-
+from rest_framework.views import APIView
+from .models import *
+from .serializers import *
+from rest_framework import status
+from django.http import Http404
+from rest_framework.response import Response
+from rest_framework import viewsets, filters
 # Create your views here.
 class UserList(APIView):
     permission_classes = []
@@ -53,4 +59,3 @@ class UserDetail(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
