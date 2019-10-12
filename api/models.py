@@ -8,7 +8,6 @@ from django.core.validators import (
 )
 from django.db.models import Q
 
-
 # --------------------- MODELS ----------------------
 class CustomUserManager(UserManager):
     def create_user(self, username, email, password=None):
@@ -41,10 +40,9 @@ class CustomUserManager(UserManager):
 
 class User(AbstractUser):
     TYPE_CHOICES = (
-        ('customer', 'Customer Care'),
-        ('ado', 'ADO Officer'),
-        ('dda', 'DDA Officer'),
-        ('admin', 'Super Admin')
+        ('builder', 'builder'),
+        ('dealer', 'dealer'),
+        ('owner', 'owner'),
     )
 
     objects = CustomUserManager()
