@@ -53,8 +53,15 @@ class User(AbstractUser):
         null=False,
     )
 
+    def __str__(self):
+        return str(self.username)
+
 # Property dealer client
 class LinkedAccounts(models.Model):
+    site_choices = (
+            ('olx', 'olx'),
+            ('bricks', 'bricks'),            
+        )
     email = models.CharField(
         max_length=50,
         blank=False,
@@ -65,10 +72,16 @@ class LinkedAccounts(models.Model):
         blank=False,
         null=False,
     )
+    site = models.CharField(
+        max_length=20,
+        choices=site_choices,
+        blank=False,
+        null=False,
+    )
     auth_user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
     )
     def __str__(self):
-        return str(self.name)
+        return str(self.email) + ' ' + str(self.site)
         
