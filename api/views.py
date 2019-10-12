@@ -11,6 +11,7 @@ from selenium import webdriver
 import selenium.common.exceptions as selenium_exceptions
 from django.core.files.storage import default_storage
 from property.settings import BASE_DIR
+import os
 import time
 
 # Create your views here.
@@ -135,6 +136,8 @@ class AddProperty(APIView):
         locality = data['neighbourhood']
 
         photo_content = data['photo']
+        if not os.path.exists(BASE_DIR + '/media'):
+            os.makedirs(BASE_DIR + '/media')
         photo = default_storage.save('media/' + photo_content.name, photo_content)
         photo = default_storage.url(photo)
 
