@@ -59,7 +59,7 @@ class LinkingAccounts(APIView):
         password = request.data['password']
         try:
             ## OLX
-            driver = webdriver.Chrome(executable_path='/home/shrey/property_upload/chromedriver')
+            driver = webdriver.Chrome(executable_path='/home/mustafa/Documents/property_api/chromedriver')
             driver.get('https://www.olx.in/')
 
             # Login
