@@ -6,6 +6,7 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import viewsets, filters
+from selenium import webdriver
 # Create your views here.
 class UserList(APIView):
     permission_classes = []
@@ -45,3 +46,47 @@ class UserDetail(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class LinkingAccounts(APIView):
+    def post(self, request, format = None):
+        email = request.data['email']
+        password = request.data['password']
+        try:
+            ## OLX
+            driver = webdriver.Chrome(executable_path='/home/shrey/property_upload/chromedriver')
+            driver.get('https://www.olx.in/')
+
+            # Login
+            login_btn = driver.find_elements_by_xpath("//button[@type='button' and @data-aut-id='btnLogin']")[0]
+            login_btn.click()
+
+            while 1:
+                try:
+                    email_login_btn = driver.find_elements_by_xpath("//button[@type='button' and @data-aut-id='emailLogin']")[0]
+                    email_login_btn.click()
+                    break
+                except IndexError:
+                    continue
+
+            email_input = driver.find_elements_by_xpath("//input[@name='email']")[0]
+            email_input.send_keys(email)
+
+            next_btn = driver.find_elements_by_xpath("//button[@type='submit']")[1]
+            next_btn.click()
+
+            while 1:
+                try:
+                    password_input = driver.find_elements_by_xpath("//input[@name='password']")[0]
+                    password_input.click()
+                    break
+                except IndexError:
+                    continue
+
+            password_input.send_keys(password)
+
+            log_in_btn = driver.find_elements_by_xpath("//button[@type='submit']")[1]
+            log_in_btn.click()
+            return Response({'status': 'success'})
+
+        except:
+            raise status.HTTP_400_BAD_REQUEST    
