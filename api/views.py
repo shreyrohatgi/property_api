@@ -324,3 +324,72 @@ class AddProperty(APIView):
             return Response({'status': 'success'})
         except:
             return Response({'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ViewProperty(APIView):
+    def get(self, request, format = None):
+        try:
+            driver = webdriver.Chrome(executable_path='/home/shrey/property_upload/chromedriver')
+            driver.get('https://www.olx.in/myads?filter=status_eq_ACTIVE')
+
+            while 1:
+                try:
+                    email_login_btn = driver.find_elements_by_xpath("//button[@type='button' and @data-aut-id='emailLogin']")[0]
+                    email_login_btn.click()
+                    break
+                except IndexError:
+                    continuepost
+
+            email_input = driver.find_elements_by_xpath("//input[@name='email']")[0]
+            email_input.send_keys('rohatgishrey@gmail.com')
+
+            next_btn = driver.find_elements_by_xpath("//button[@type='submit']")[0]
+            next_btn.click()
+
+            while 1:
+                try:
+                    password_input = driver.find_elements_by_xpath("//input[@name='password']")[0]
+                    password_input.click()
+                    break
+                except IndexError:
+                    continue
+
+            password_input.send_keys('Olx@123')
+
+            log_in_btn = driver.find_elements_by_xpath("//button[@type='submit']")[0]
+            log_in_btn.click()
+
+            while 1:
+                try:
+                    my_ads_dropdown = driver.find_elements_by_xpath("//div[@data-aut-id='iconProfile']")[0]
+                    my_ads_dropdown.click()
+                    break
+                except IndexError:
+                    continue
+
+            my_ads_btn = driver.find_elements_by_xpath("//a[@data-aut-id='btnProfileMyAds']")[0]
+            my_ads_btn.click()
+
+            while 1:
+                try:
+                    active_adds_btn = driver.find_elements_by_xpath("//button[@data-aut-id='myadsStatusFilterItem']")[1]
+                    active_adds_btn.click()
+                    break
+                except IndexError:
+                    continue
+
+            time.sleep(2)
+            titles = driver.find_elements_by_xpath("//span[@class='_12XJ7']")
+            descriptions = driver.find_elements_by_xpath("//span[@class='_1zE4A']")
+            prices = driver.find_elements_by_xpath("//span[@class='_3-H54']")
+
+            data = []
+            for i in range(len(titles)):
+                title = titles[i].text
+                description = descriptions[i].text
+                price = prices[i].text
+                data.append({'title': title, 'description': description, 'price': price})
+            driver.close()
+            
+            return Response({'status': 'success', 'data': data})
+        except:
+            return Response({'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
